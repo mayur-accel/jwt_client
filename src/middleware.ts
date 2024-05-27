@@ -25,13 +25,5 @@ export function middleware(req: NextRequest) {
 
 // Configuration for matching specific routes to apply this middleware
 export const config = {
-  matcher: [
-    "/",
-    "/login",
-    "/register",
-    "/dashboard",
-    "/profile",
-    "/settings",
-    "/user/profile",
-  ], // Add all paths that should be handled by this middleware
+  matcher: ["/login", "/register", "/user/profile"], // Add all paths that should be handled by this middleware
 };

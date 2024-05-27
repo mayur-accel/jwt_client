@@ -3,9 +3,20 @@
 import { config } from "@/config/config";
 import { setAccessToken } from "@/utils/commonFunction";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
-import Input from "../ui/Input";
+import { ChangeEvent, Fragment, useState } from "react";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -36,27 +47,40 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="text-center w-1/5">
-      <h2 className="text-6xl font-bold mb-10">Login Form</h2>
-      <div className="flex flex-col gap-4 mb-10 w-full">
+    <Card className="w-[320px]">
+      <CardHeader>
+        <CardTitle className="text-4xl font-blod">Login Form</CardTitle>
+        <CardDescription>Login and access your details</CardDescription>
+      </CardHeader>
+      <CardContent className="gap-2 flex flex-col">
         {Object.keys(data).map((key: string) => (
-          <Input
-            key={key}
-            name={key}
-            onChange={handleChange}
-            // @ts-ignore
-            value={data[key]}
-            placeholder={`Enter your ${key}`}
-          />
+          <Fragment key={key}>
+            <Label className="capitalize" htmlFor={key}>
+              {key}
+            </Label>
+            <Input
+              name={key}
+              id={key}
+              onChange={handleChange}
+              // @ts-ignore
+              value={data[key]}
+              placeholder={`Enter your ${key}`}
+            />
+          </Fragment>
         ))}
-      </div>
-      <button
-        className="bg-red-700 py-3 px-4 font-semibold text-white rounded-md text-lg"
-        onClick={handleLogin}
-      >
-        Login
-      </button>
-    </div>
+      </CardContent>
+      <CardFooter className="flex flex-col gap-4">
+        <Button className="w-full" variant="destructive" onClick={handleLogin}>
+          Login
+        </Button>
+        <p className="text-gray-500">
+          Don't have an account?{" "}
+          <Link className="text-blue-700" href={"/register"}>
+            Register
+          </Link>
+        </p>
+      </CardFooter>
+    </Card>
   );
 };
 
