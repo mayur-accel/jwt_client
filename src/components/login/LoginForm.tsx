@@ -33,7 +33,6 @@ const LoginForm = () => {
 
   const handleLogin = async () => {
     try {
-      console.log("login");
       const result = await axios.post(`${config.backendUrl}/auth/login`, data);
       if (result.data.status === 200) {
         await setAccessToken(result.data.data.token);
@@ -74,6 +73,7 @@ const LoginForm = () => {
           Login
         </Button>
         <p className="text-gray-500">
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
           Don't have an account?{" "}
           <Link className="text-blue-700" href={"/register"}>
             Register

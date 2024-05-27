@@ -35,7 +35,6 @@ const RegisterForm = () => {
 
   const handleRegister = async () => {
     try {
-      console.log("register");
       const result = await axios.post(
         config.backendUrl + "/auth/register",
         data
@@ -51,7 +50,6 @@ const RegisterForm = () => {
         });
         router.push("/login");
       }
-      console.log(result);
     } catch (err) {
       console.error(err);
     }
