@@ -1,9 +1,8 @@
 "use client";
 
 import axiosInterceptorInstance from "@/lib/axiosInterceptorInstance";
-import { setAccessToken } from "@/utils/commonFunction";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
 import { Button } from "../ui/button";
 import {
@@ -17,11 +16,13 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-const LoginForm = () => {
+const SetPasswordForm = () => {
   const router = useRouter();
+  const params = useParams();
+
   const [data, setData] = useState({
-    email: "",
-    password: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,12 +31,19 @@ const LoginForm = () => {
     setData({ ...data, [name]: value });
   };
 
-  const handleLogin = async () => {
+  const handleSetPassword = async () => {
     try {
-      const result = await axiosInterceptorInstance.post(`/auth/login`, data);
+      const body = {
+        password: data.newPassword,
+        confirmPassword: data.confirmPassword,
+        resetToken: params.token,
+      };
+      const result = await axiosInterceptorInstance.post(
+        `/auth/set-password`,
+        body
+      );
       if (result.data.status === 200) {
-        await setAccessToken(result.data.data.token);
-        router.push("/user/profile");
+        router.push("/login");
       } else {
         console.error("Login failed: ", result.data.message);
       }
@@ -47,7 +55,7 @@ const LoginForm = () => {
   return (
     <Card className="w-[320px]">
       <CardHeader>
-        <CardTitle className="text-4xl font-blod">Login Form</CardTitle>
+        <CardTitle className="text-4xl font-blod">Set Password Form</CardTitle>
         <CardDescription>Login and access your details</CardDescription>
       </CardHeader>
       <CardContent className="gap-2 flex flex-col">
@@ -66,15 +74,14 @@ const LoginForm = () => {
             />
           </Fragment>
         ))}
-        <div className="flex justify-end mt-4">
-          <Link href={"/forgot-password"} className="text-blue-500 text-left">
-            Forgot Password?
-          </Link>
-        </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-4">
-        <Button className="w-full" variant="destructive" onClick={handleLogin}>
-          Login
+        <Button
+          className="w-full"
+          variant="destructive"
+          onClick={handleSetPassword}
+        >
+          Set Password
         </Button>
         <p className="text-gray-500">
           {/* eslint-disable-next-line react/no-unescaped-entities */}
@@ -88,4 +95,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SetPasswordForm;
