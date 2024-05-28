@@ -1,4 +1,5 @@
 "use client";
+import axiosInterceptorInstance from "@/lib/axiosInterceptorInstance";
 import { getAccessToken, logout } from "@/utils/commonFunction";
 import { useRouter } from "next/navigation";
 
@@ -6,6 +7,7 @@ const Header = () => {
   const router = useRouter();
   const handleLogout = async () => {
     const token: any = getAccessToken("access-token");
+    await axiosInterceptorInstance.post("/auth/logout");
     await logout(token);
     router.push("/login");
   };
