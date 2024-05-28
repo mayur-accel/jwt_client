@@ -1,7 +1,6 @@
 "use client";
 
-import { config } from "@/config/config";
-import axios from "axios";
+import axiosInterceptorInstance from "@/lib/axiosInterceptorInstance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
@@ -35,8 +34,8 @@ const RegisterForm = () => {
 
   const handleRegister = async () => {
     try {
-      const result = await axios.post(
-        config.backendUrl + "/auth/register",
+      const result = await axiosInterceptorInstance.post(
+        "/auth/register",
         data
       );
 

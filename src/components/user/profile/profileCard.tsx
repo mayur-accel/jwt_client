@@ -8,9 +8,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { config } from "@/config/config";
+import axiosInterceptorInstance from "@/lib/axiosInterceptorInstance";
 import { getAccessToken } from "@/utils/commonFunction";
 import { Label } from "@radix-ui/react-label";
-import axios from "axios";
 import jwt from "jsonwebtoken";
 import { ChangeEvent, Fragment, useEffect, useState } from "react";
 
@@ -24,31 +24,25 @@ const ProfileCard = () => {
   });
 
   const getData = async () => {
-    const token: any = await getAccessToken("access-token");
-    const decode: any = jwt.decode(token.value);
+    try {
+      const token: any = await getAccessToken("access-token");
+      const decode: any = jwt.decode(token.value);
 
-    const configg: any = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token.value}`,
-      },
-    };
-
-    const result = await axios.get(
-      `${config.backendUrl}/user/${decode.id}`,
-      configg
-    );
-    setData({
-      firstName: result.data.data.firstName,
-      lastName: result.data.data.lastName,
-      email: result.data.data.email,
-    });
-    const str = {
-      firstName: result.data.data.firstName,
-      lastName: result.data.data.lastName,
-    };
-    setApiString(JSON.stringify(str));
-    setIsLoading(false);
+      const result = await axiosInterceptorInstance.get(`/user/${decode.id}`);
+      setData({
+        firstName: result.data.data.firstName,
+        lastName: result.data.data.lastName,
+        email: result.data.data.email,
+      });
+      const str = {
+        firstName: result.data.data.firstName,
+        lastName: result.data.data.lastName,
+      };
+      setApiString(JSON.stringify(str));
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -65,22 +59,14 @@ const ProfileCard = () => {
     const token: any = await getAccessToken("access-token");
     const decode: any = jwt.decode(token.value);
 
-    const configg: any = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token.value}`,
-      },
-    };
-
     const updateData = {
       firstName: data.firstName,
       lastName: data.lastName,
     };
 
-    await axios.patch(
+    await axiosInterceptorInstance.patch(
       `${config.backendUrl}/user/${decode.id}`,
-      updateData,
-      configg
+      updateData
     );
 
     const str = {

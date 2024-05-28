@@ -1,8 +1,7 @@
 "use client";
 
-import { config } from "@/config/config";
+import axiosInterceptorInstance from "@/lib/axiosInterceptorInstance";
 import { setAccessToken } from "@/utils/commonFunction";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
@@ -33,7 +32,7 @@ const LoginForm = () => {
 
   const handleLogin = async () => {
     try {
-      const result = await axios.post(`${config.backendUrl}/auth/login`, data);
+      const result = await axiosInterceptorInstance.post(`/auth/login`, data);
       if (result.data.status === 200) {
         await setAccessToken(result.data.data.token);
         router.push("/user/profile");
